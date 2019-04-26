@@ -1,0 +1,10 @@
+[Unit]
+Description=MPV Remote Socket
+Documentation=man:mpv(1)
+
+[Socket]
+ListenStream=/run/mpv/io.mpv
+SocketMode=0600
+
+[Install]
+WantedBy=sockets.target

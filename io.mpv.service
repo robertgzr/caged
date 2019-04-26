@@ -1,0 +1,22 @@
+[Unit]
+Description=MPV Remote Service
+Requires=io.mpv.socket
+After=io.mpv.socket
+Documentation=man:mpv(1)
+
+ConditionPathExists=/dev/tty1
+
+[Service]
+Type=simple
+TimeoutStartSec=5m
+
+ExecStart=/usr/bin/podman run --privileged --device=/dev/tty1 --device=/dev/dri --device=/dev/input --device=/dev/snd --cap-add=SYS_TTY_CONFIG --cap-add=SYS_ADMIN --volume=/run/udev/data:/run/udev/data:ro --volume=/etc/asound.conf:/etc/asound.conf:ro --env=XDG_VTNR=1 --volume=/run/mpv:/run/cage --volume=/run/mpv:/run/mpv --name="io-mpv-service" --cpus="2" --memory=10g --rm 192.168.1.3:5000/mpv
+ExecReload=-/usr/bin/podman stop "io-mpv-service"
+ExecStop=-/usr/bin/podman stop "io-mpv-service"
+
+Restart=on-failure
+RestartSec=30
+
+[Install]
+WantedBy=multi-user.target
+Also=io.mpv.socket
